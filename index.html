@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Video Anonymization</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">    
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">    
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+   
+  <style>
+    body{
+        background-color: black;
+        color:bisque;
+    }
+     
+    div{
+        color: black;
+    }
+
+    .parent{
+        height: 100%;
+        width: 100%;
+        border: 13px solid whitesmoke;
+    }
+    .p{
+    
+        width: 520px;
+        height: auto;
+        border: 5px solid green;
+        border-radius: 5px;
+        padding: 5px;
+        background-color: darkgray;
+    }
+
+   h1{
+    color: aliceblue;
+   }
+  </style>
+
+<script>
+    function checkforblank()
+    {
+    if(document.getElementById('vid').value==""){
+    alert ("Please select a file first");
+    return false;
+    }
+    var img1=document.forms['myform']['vid'];
+    if(parseFloat(img1.files[0].size/(1024*1024))>=200){
+    alert ("File size must be smaller than 200 MB");
+    return false;
+    }
+    document.getElementById('preloader').style.display = "block";
+    document.getElementById('upld').style.display = "none";
+    }
+    </script>
+</head>
+
+
+<body>
+<div class="parent">
+</br>
+<main>
+    <div class="container">
+        <div class="topnav-right">
+            <a href="help.html">Help</a>
+            </div>
+    <center>
+    <h1 style="font-family:algerian;">Video Anonymization</h1>
+    <video id="preview">Preview of source video</video><br>
+    <form name="myform" id="myform" action="/result" method="post"onsubmit="return checkforblank()">
+    <div class="form-ele">
+    <div class="upld-container">
+    <div class="upld-info">
+    <i class="fas fa-cloud-upload-alt"></i>
+    <div class="p">
+    <span id="boot-icon" class="bi bi-cloud-arrow-up-fill"  style="font-size: 25px; opacity: 1; color: rgb(10, 10, 10);"> Choose a video  Limit 200MB per file</span>
+    <input type="file" name="vid" id="vid" accept="video/*"/>
+    <p id="vid-name"></p>
+    </div>
+    </div>
+    <br/>
+    <input type="submit" value="Process" id="upld"/>  
+    </div>
+    <h2 class="success">{{info}}</h2>
+</form>
+<script>
+    const video = document.getElementById("vid");
+    const preview = document.getElementById("preview");
+    const vidSrc = document.createElement("source");
+    video.addEventListener("change", () => {
+    const filename = video.files[0].name;
+    console.log(filename);
+    const vidName = document.getElementById("vid-name");
+    vidName.style.display = "inline";
+    vidName.innerHTML = filename;
+    const files = video.files || [];
+    if (!files.length) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+    preview.style.display = "block";
+    vidSrc.setAttribute("src", e.target.result);
+    preview.appendChild(vidSrc);
+    preview.load();
+    preview.play();
+    };
+    reader.onprogress = (e) => {
+    console.log("progress: ", Math.round((e.loaded * 100) / e.total));
+    };
+    reader.readAsDataURL(files[0]);
+    });
+    </script>
+</center>
+</main>
+</div>
+</body>
+</html>
